@@ -11,31 +11,41 @@ as the number of entries of ```m_klmClusters```.
 * ```m_KLMnLayer``` - number of layers hit in KLM cluster
   - TYPE: ```Float_t```
   - Defined at ```reconstruction/modules/KlId/KLMExpert/KLMExpertModule.cc```:
-&nbsp;&nbsp;&nbsp;&nbsp; ```m_KLMnLayer = cluster.getLayers();```
+```cpp
+m_KLMnLayer = cluster.getLayers();
+```
 as the numbers of layers extracted from function ```getLayers()```, which is defined at ```klm/dataobjects/bklm/BKLMHit1d.h``` like this:  
-```return BKLMElementNumbers::getLayerByModule(m_ModuleID);```
+```cpp
+return BKLMElementNumbers::getLayerByModule(m_ModuleID);
+```
 where ```BKLMElementNumbers``` is a class defined at
 ```klm/dataobajects/bklm/BKLMElementNumbers.h```.  
 
   - ```getLayerByModule()``` is also defined there as:  
-```return ((module & BKLM_LAYER_MASK)>> BKLM_LAYER_BIT) + 1;```
+```cpp
+return ((module & BKLM_LAYER_MASK)>> BKLM_LAYER_BIT) + 1;
+```
 
 CONTINUE LATER!!!!!!!!!!! DONT UNDERSTAND
 
 
 * ```m_KLMnInnermostLayer```- number of innermost layers hit cluster
   - TYPE: ```Float_t```
-  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```
-```m_KLMnInnermostLayer = cluster.getInnermostLayer();```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:  
+```cpp
+m_KLMnInnermostLayer = cluster.getInnermostLayer();
+```
 
 CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m\_KLMnLayer, eg the smallest number or sth
 
     
 * ```m_KLMglobalZ```- global Z position in KLM
   - TYPE: ```Float_t```
-  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as:
-```const ROOT::Math::XYZVector& clusterPos = cluster.getClusterPosition();```  
-```m_KLMglobalZ  = clusterPos.Z();```  
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as:  
+```cpp
+const ROOT::Math::XYZVector& clusterPos = cluster.getClusterPosition();
+m_KLMglobalZ  = clusterPos.Z();
+```  
 where ```getClusterPosition()``` is defined at ```mdst/dataobjects/ECLClusters.cc```:  
 ```cpp
 TMatrixDSym ECLCluster::getCovarianceMatrix3x3() const{ 
