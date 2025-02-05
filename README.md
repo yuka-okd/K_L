@@ -15,7 +15,7 @@ as the numbers of layers extracted from function ```getLayers()```, which is def
 where ```BKLMElementNumbers``` is a class defined at
 ```klm/dataobajects/bklm/BKLMElementNumbers.h```.  
 
-```getLayerByModule()``` is also defined there as:  
+  - ```getLayerByModule()``` is also defined there as:  
 ```return ((module & BKLM_LAYER_MASK)>> BKLM_LAYER_BIT) + 1;```
 
 CONTINUE LATER!!!!!!!!!!! DONT UNDERSTAND
