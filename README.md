@@ -35,11 +35,12 @@ CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m\
 ```const ROOT::Math::XYZVector& clusterPos = cluster.getClusterPosition();```  
 ```m_KLMglobalZ  = clusterPos.Z();```  
 where ```getClusterPosition()``` is defined at ```mdst/dataobjects/ECLClusters.cc```:  
-```TMatrixDSym ECLCluster::getCovarianceMatrix3x3() const{ ```  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```const double cluster_x =  getR() * sin(getTheta()) * cos(getPhi())```  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```const double cluster_y =  getR() * sin(getTheta()) * sin(getPhi());```  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```const double cluster_z =  getR() * cos(getTheta());```  
-```return ROOT::Math::XYZVector(cluster_x, cluster_y, cluster_z);```  
+```cpp
+TMatrixDSym ECLCluster::getCovarianceMatrix3x3() const{ 
+    const double cluster_x =  getR() * sin(getTheta()) * cos(getPhi())
+    const double cluster_y =  getR() * sin(getTheta()) * sin(getPhi());  
+    const double cluster_z =  getR() * cos(getTheta());
+return ROOT::Math::XYZVector(cluster_x, cluster_y, cluster_z);```  
 
 IS IT WORRYING THAT THE CLUSTER DEFINED HERE IS THE ECLCLUSTER BUT WE ARE USING IT FOR KLM CLUSTER??
 
