@@ -30,7 +30,7 @@ Here are the notes on K_L identification. It goes through how the variables rela
       return ((module & BKLM_LAYER_MASK)>> BKLM_LAYER_BIT) + 1;
       ```
 
-CONTINUE LATER!!!!!!!!!!! DONT UNDERSTAND
+> **Note** CONTINUE LATER!!!!!!!!!!! DONT UNDERSTAND
 
 
 * ```m_KLMnInnermostLayer```- number of innermost layers hit cluster
@@ -41,7 +41,7 @@ CONTINUE LATER!!!!!!!!!!! DONT UNDERSTAND
       m_KLMnInnermostLayer = cluster.getInnermostLayer();
       ```
 
-CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m\_KLMnLayer, eg the smallest number or sth
+> **Note** CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m\_KLMnLayer, eg the smallest number or sth
 
     
 * ```m_KLMglobalZ```- global Z position in KLM
@@ -64,7 +64,7 @@ CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m\
 
 > **Note** IS IT WORRYING THAT THE CLUSTER DEFINED HERE IS THE ECLCLUSTER BUT WE ARE USING IT FOR KLM CLUSTER??
 
-Cannot find definition of .Z() but I assumed it was extracting the z component of XYZVector
+> **Note** Cannot find definition of .Z() but I assumed it was extracting the z component of XYZVector
 
 
 
