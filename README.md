@@ -62,7 +62,7 @@ CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m\
       return ROOT::Math::XYZVector(cluster_x, cluster_y, cluster_z);
       ```  
 
-IS IT WORRYING THAT THE CLUSTER DEFINED HERE IS THE ECLCLUSTER BUT WE ARE USING IT FOR KLM CLUSTER??
+> **Note** IS IT WORRYING THAT THE CLUSTER DEFINED HERE IS THE ECLCLUSTER BUT WE ARE USING IT FOR KLM CLUSTER??
 
 Cannot find definition of .Z() but I assumed it was extracting the z component of XYZVector
 
