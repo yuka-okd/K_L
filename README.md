@@ -213,6 +213,7 @@ Here are the notes on K_L identification. It goes through how the variables rela
   - TYPE: ```Float_t```
   - This varible is defined at  ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
       ```cpp
+      m_KLMTrackRotationAngle   = -999;
       auto trackSeperations = cluster.getRelationsTo<TrackClusterSeparation>();
       TrackClusterSeparation* trackSep;
       float best_dist = 100000000;
@@ -234,7 +235,27 @@ Here are the notes on K_L identification. It goes through how the variables rela
 > **Note** again cannot find code to vary this value, FIND IT
     
       
+* ```m_KLMTrackClusterSepAngle```- angle between track momentum and cluster (measured from ip)
+  - TYPE: ```Float_t```
+  - This variable is defined in a similar way to the previous few variables at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
+      ```cpp
+      m_KLMTrackClusterSepAngle = -999;
+      auto trackSeperations = cluster.getRelationsTo<TrackClusterSeparation>();
+      for (auto trackSeperation :  trackSeperations) {
+        float dist = trackSeperation.getDistance();
+        if (dist < best_dist) {
+          m_KLMTrackClusterSepAngle = trackSep->getTrackClusterSeparationAngle();
+      ```
+> **Note** Same as the previous note.
 
+* ```m_KLMAngleToMC```- angle between KLMcluster and Mcparticle
+  - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
+      ```cpp
+      m_KLMAngleToMC = ROOT::Math::VectorUtil::Angle(clusterPos, part->getMomentum());
+      ```
+
+    
     
     
     
