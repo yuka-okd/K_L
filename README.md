@@ -209,7 +209,32 @@ Here are the notes on K_L identification. It goes through how the variables rela
     Again, initialized at ```tracking/dataobjects/src/TrackClusterSeparation.cc``` but cannot find code that changes this value.
     
     
+* ```m_KLMTrackRotationAngle```: angle between track at poca and trackbeginning
+  - TYPE: ```Float_t```
+  - This varible is defined at  ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
+      ```cpp
+      auto trackSeperations = cluster.getRelationsTo<TrackClusterSeparation>();
+      TrackClusterSeparation* trackSep;
+      float best_dist = 100000000;
+      for (auto trackSeperation :  trackSeperations) {
+        float dist = trackSeperation.getDistance();
+        if (dist < best_dist) {
+          m_KLMTrackRotationAngle = trackSep->getTrackRotationAngle();
+      ```
+    where ```getTrackRotationAngle()``` is defined at ```tracking/dataobjects/TrackClusterSeparation.h```:
+      ```cpp
+      double getTrackRotationAngle() const { return m_TrackRotationAngle; }
+      ```
+    again, ```m_TrackRotationAngle``` is defined at ```tracking/dataobjects/TrackClusterSeparation.cc```:
+      ```cpp
+      TrackClusterSeparation::TrackClusterSeparation() :
+        m_TrackRotationAngle(0.0)
+      ```
+
+> **Note** again cannot find code to vary this value, FIND IT
     
+      
+
     
     
     
