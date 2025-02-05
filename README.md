@@ -6,7 +6,7 @@ Here are the notes on K_L identification. It goes through how the variables rela
        ```cpp
        m_KLMnCluster = m_klmClusters.getEntries();
        ```  
-        as the number of entries of ```m_klmClusters```.
+    as the number of entries of ```m_klmClusters```.
 
 * ```m_KLMnLayer``` - number of layers hit in KLM cluster
   - TYPE: ```Float_t```
