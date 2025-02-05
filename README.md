@@ -32,14 +32,14 @@ CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m\
 * ```m_KLMglobalZ```- global Z position in KLM
   - TYPE: ```Float_t```
   - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as:
-```const ROOT::Math::XYZVector& clusterPos = cluster.getClusterPosition();```
-```m_KLMglobalZ  = clusterPos.Z();```
-where ```getClusterPosition()``` is defined at ```mdst/dataobjects/ECLClusters.cc```:
-```TMatrixDSym ECLCluster::getCovarianceMatrix3x3() const\{ ```
-```const double cluster_x =  getR() * sin(getTheta()) * cos(getPhi())```
-```const double cluster_y =  getR() * sin(getTheta()) * sin(getPhi());```
-```const double cluster_z =  getR() * cos(getTheta());```
-```return ROOT::Math::XYZVector(cluster_x, cluster_y, cluster_z);```
+```const ROOT::Math::XYZVector& clusterPos = cluster.getClusterPosition();```  
+```m_KLMglobalZ  = clusterPos.Z();```  
+where ```getClusterPosition()``` is defined at ```mdst/dataobjects/ECLClusters.cc```:  
+```TMatrixDSym ECLCluster::getCovarianceMatrix3x3() const\{ ```  
+```const double cluster_x =  getR() * sin(getTheta()) * cos(getPhi())```  
+```const double cluster_y =  getR() * sin(getTheta()) * sin(getPhi());```  
+```const double cluster_z =  getR() * cos(getTheta());```  
+```return ROOT::Math::XYZVector(cluster_x, cluster_y, cluster_z);```  
 
 IS IT WORRYING THAT THE CLUSTER DEFINED HERE IS THE ECLCLUSTER BUT WE ARE USING IT FOR KLM CLUSTER??
 
