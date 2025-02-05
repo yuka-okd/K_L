@@ -10,9 +10,10 @@ as the number of entries of ```m_klmClusters```.
   - TYPE: ```Float_t```
   - Defined at ```reconstruction/modules/KlId/KLMExpert/KLMExpertModule.cc```:
 &nbsp;&nbsp;&nbsp;&nbsp; ```m_KLMnLayer = cluster.getLayers();```
-as the numbers of layers extracted from function ```getLayers()```, which is defined at ```klm/dataobjects/bklm/BKLMHit1d.h``` like this:
+as the numbers of layers extracted from function ```getLayers()```, which is defined at ```klm/dataobjects/bklm/BKLMHit1d.h``` like this:  
 ```return BKLMElementNumbers::getLayerByModule(m_ModuleID);```
-where ```BKLMElementNumbers``` is a class defined at ```klm/dataobajects/bklm/BKLMElementNumbers.h```.  
+where ```BKLMElementNumbers``` is a class defined at
+```klm/dataobajects/bklm/BKLMElementNumbers.h```.  
 
 ```getLayerByModule()``` is also defined there as:  
 ```return ((module & BKLM_LAYER_MASK)>> BKLM_LAYER_BIT) + 1;```
