@@ -19,8 +19,15 @@ where ```BKLMElementNumbers``` is a class defined at
 ```return ((module & BKLM_LAYER_MASK)>> BKLM_LAYER_BIT) + 1;```
 
 CONTINUE LATER!!!!!!!!!!! DONT UNDERSTAND
-  
-    
+
+
+* ```m_KLMnInnermostLayer```- number of innermost layers hit cluster
+  - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```
+```m_KLMnInnermostLayer = cluster.getInnermostLayer();```
+
+CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m\_KLMnLayer, eg the smallest number or sth
+
     
 
 
