@@ -175,10 +175,38 @@ Here are the notes on K_L identification. It goes through how the variables rela
       ```
 > **Note** Cannot find code that changes this value, would be bad if this was used in all cases, FIND WHERE
 
+* ```m_KLMTrackSepAngle```- angular distance from track separation object
+  - TYPE: ```Float_t```
+  - This variable defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
+      ```cpp
+      auto trackSeperations = cluster.getRelationsTo<TrackClusterSeparation>();
+      trackSep = &trackSeperation;
+      m_KLMTrackSepAngle = trackSep->getTrackClusterAngle();
+      ```
+    where ```getTrackClusterAngle()``` is defined at ```tracking/dataobjects/TrackClusterSeparation.h```:
+      ```cpp
+      double getTrackClusterAngle() const { return m\_TrackClusterAngle;
+      ```
+    where again, ```m_TrackClusterAngle``` is initialized in ```tracking/dataobjects/TrackClusterSeparation.cc```:
+      ```cpp
+      TrackClusterSeparation::TrackClusterSeparation() :
+      m_TrackClusterAngle(0.0),
+      ```
+> **Note** No code was found to alter this value. MUST FIND
 
-    
-    
-      
+
+* ```m_KLMInitialTrackSepAngle```: angular distance from track to cluster at track starting point
+  - TYPE: ```Float_t```
+  - The variable is defined at ```reconstruction/modules/KlId/DataWriter/src/DataWriterModule.cc```:
+      ```cpp
+      m_KLMInitialTrackSepAngle = trackSep->getTrackClusterInitialSeparationAngle();
+      ```
+    where ```getTrackClusterInitialSeparationAngle()``` is defined at ```tracking/dataobjects/TrackClusterSeparation.h```:
+
+      ```cpp
+      double getTrackClusterInitialSeparationAngle() const { return m_TrackClusterInitialSeparationAngle; }
+      ```
+    Again, initialized at ```tracking/dataobjects/src/TrackClusterSeparation.cc``` but cannot find code that changes this value.
     
     
     
