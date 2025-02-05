@@ -4,8 +4,8 @@ Here are the notes on K_L identification. It goes through how the variables rela
   - TYPE: ```Float_t```
   - Defined at ```reconstruction/modules/KlId/KLMExpert/KLMExpertModule.cc```:  
    ```cpp
-m_KLMnCluster = m_klmClusters.getEntries();
-```  
+   m_KLMnCluster = m_klmClusters.getEntries();
+   ```  
 as the number of entries of ```m_klmClusters```.
 
 * ```m_KLMnLayer``` - number of layers hit in KLM cluster
