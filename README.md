@@ -2,6 +2,7 @@ Here are the notes on K_L identification. It goes through how the variables rela
 
 * ```m_KLMnCluster```
   - Number of clusters
+  - TYPE: ```Float_t```
 
 
 
