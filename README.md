@@ -40,7 +40,8 @@ TMatrixDSym ECLCluster::getCovarianceMatrix3x3() const{
     const double cluster_x =  getR() * sin(getTheta()) * cos(getPhi())
     const double cluster_y =  getR() * sin(getTheta()) * sin(getPhi());  
     const double cluster_z =  getR() * cos(getTheta());
-return ROOT::Math::XYZVector(cluster_x, cluster_y, cluster_z); cpp```  
+return ROOT::Math::XYZVector(cluster_x, cluster_y, cluster_z);
+```  
 
 IS IT WORRYING THAT THE CLUSTER DEFINED HERE IS THE ECLCLUSTER BUT WE ARE USING IT FOR KLM CLUSTER??
 
