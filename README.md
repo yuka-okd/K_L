@@ -255,7 +255,28 @@ Here are the notes on K_L identification. It goes through how the variables rela
       m_KLMAngleToMC = ROOT::Math::VectorUtil::Angle(clusterPos, part->getMomentum());
       ```
 
+> **Note** CANNOT FIND CODE FOR ```Angle()```... Maybe its the same as the function ```ANGLE(P,Q)``` defined at ```generators/koralw/koralw/koeww/kinelib.f```.
+
+
+* ```m_KLMECLDist```- distance associated ECL <-> KLM cluster
+  - TYPE: ```FLoat_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
+      ```cpp
+      m_KLMECLDist = get<1>(closestECLAndDist);
+      ```
+    where ```closestECLAndDist``` is defined at the same place as :
+      ```cpp
+      pair<ECLCluster*, double> closestECLAndDist = findClosestECLCluster(clusterPos, eclHypothesis);
+      ```
+    where ```findClosestECLCluster()``` is defined at ```reconstruction/modules/KlId/KLMExpert/KlId.h``` (long so will not display here).
+
+> **Note** NOW LOOK FOR HOW ```findClosestECLCluster()``` defines ```m_KLMECLDist```
+
+
+      
     
+
+
     
     
     
