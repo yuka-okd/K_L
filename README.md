@@ -66,6 +66,42 @@ Here are the notes on K_L identification. It goes through how the variables rela
 
 > **Note** Cannot find definition of .Z() but I assumed it was extracting the z component of XYZVector
 
+* ```m_KLMtime```- timing of KLM Cluster
+  - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
+      ```cpp
+      m_KLMtime = cluster.getTime();
+      ```
+> **Note** COULD NOT FIND DEF OF getTime()!!!!
+
+* ```m_KLMavInterClusterDist```- average distance between all KLM clusters
+  - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
+      ```cpp
+      tuple<const KLMCluster*, double, double> closestKLMAndDist = findClosestKLMCluster(clusterPos);
+      m_KLMavInterClusterDist = get<2>(closestKLMAndDist);
+      ```
+    where ```findClosestKLMCluster``` is defined at ```reconstruction/modules/KlId/KLMExpert/KlId.h``` (too long to display here).
+
+    From the def of ```findClosestKLMCluster```, which returns:
+      ```cpp
+      return std::make_tuple(closestKLM, closestKLMDist, avInterClusterDist);
+      ```
+    it seems reasonable to assume ```get<2>``` extract the 3rd component of ```closestKLMAndDist``` which is the ```m_KLMavInterClusterDist.
+
+    
+
+    
+
+
+
+
+
+
+
+
+
+    
 
 
 
