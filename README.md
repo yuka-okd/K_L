@@ -11,21 +11,24 @@ Here are the notes on K_L identification. It goes through how the variables rela
 
 * ```m_KLMnLayer``` - number of layers hit in KLM cluster
   - TYPE: ```Float_t```
-  - Defined at ```reconstruction/modules/KlId/KLMExpert/KLMExpertModule.cc```:  
-  ```cpp
-  m_KLMnLayer = cluster.getLayers();
-  ```
-as the numbers of layers extracted from function ```getLayers()```, which is defined at ```klm/dataobjects/bklm/BKLMHit1d.h``` like this:  
-```cpp
-return BKLMElementNumbers::getLayerByModule(m_ModuleID);
-```
-where ```BKLMElementNumbers``` is a class defined at
-```klm/dataobajects/bklm/BKLMElementNumbers.h```.  
+  - Defined at ```reconstruction/modules/KlId/KLMExpert/KLMExpertModule.cc```:
+        
+      ```cpp
+      m_KLMnLayer = cluster.getLayers();
+      ```
+    as the numbers of layers extracted from function ```getLayers()```, which is defined at ```klm/dataobjects/bklm/BKLMHit1d.h``` like this:
+    
+      ```cpp
+      return BKLMElementNumbers::getLayerByModule(m_ModuleID);
+      ```
+    where ```BKLMElementNumbers``` is a class defined at
+    ```klm/dataobajects/bklm/BKLMElementNumbers.h```.  
 
-  - ```getLayerByModule()``` is also defined there as:  
-```cpp
-return ((module & BKLM_LAYER_MASK)>> BKLM_LAYER_BIT) + 1;
-```
+  - ```getLayerByModule()``` is also defined there as:
+        
+    ```cpp
+    return ((module & BKLM_LAYER_MASK)>> BKLM_LAYER_BIT) + 1;
+    ```
 
 CONTINUE LATER!!!!!!!!!!! DONT UNDERSTAND
 
