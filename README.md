@@ -26,38 +26,41 @@ Here are the notes on K_L identification. It goes through how the variables rela
 
   - ```getLayerByModule()``` is also defined there as:
         
-    ```cpp
-    return ((module & BKLM_LAYER_MASK)>> BKLM_LAYER_BIT) + 1;
-    ```
+      ```cpp
+      return ((module & BKLM_LAYER_MASK)>> BKLM_LAYER_BIT) + 1;
+      ```
 
 CONTINUE LATER!!!!!!!!!!! DONT UNDERSTAND
 
 
 * ```m_KLMnInnermostLayer```- number of innermost layers hit cluster
   - TYPE: ```Float_t```
-  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:  
-```cpp
-m_KLMnInnermostLayer = cluster.getInnermostLayer();
-```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
+    
+      ```cpp
+      m_KLMnInnermostLayer = cluster.getInnermostLayer();
+      ```
 
 CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m\_KLMnLayer, eg the smallest number or sth
 
     
 * ```m_KLMglobalZ```- global Z position in KLM
   - TYPE: ```Float_t```
-  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as:  
-```cpp
-const ROOT::Math::XYZVector& clusterPos = cluster.getClusterPosition();
-m_KLMglobalZ  = clusterPos.Z();
-```  
-where ```getClusterPosition()``` is defined at ```mdst/dataobjects/ECLClusters.cc```:  
-```cpp
-TMatrixDSym ECLCluster::getCovarianceMatrix3x3() const{ 
-    const double cluster_x =  getR() * sin(getTheta()) * cos(getPhi())
-    const double cluster_y =  getR() * sin(getTheta()) * sin(getPhi());  
-    const double cluster_z =  getR() * cos(getTheta());
-return ROOT::Math::XYZVector(cluster_x, cluster_y, cluster_z);
-```  
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as:
+    
+      ```cpp
+      const ROOT::Math::XYZVector& clusterPos = cluster.getClusterPosition();
+      m_KLMglobalZ  = clusterPos.Z();
+      ```  
+    where ```getClusterPosition()``` is defined at ```mdst/dataobjects/ECLClusters.cc```:
+    
+        ```cpp
+    TMatrixDSym ECLCluster::getCovarianceMatrix3x3() const{ 
+        const double cluster_x =  getR() * sin(getTheta()) * cos(getPhi())
+        const double cluster_y =  getR() * sin(getTheta()) * sin(getPhi());  
+        const double cluster_z =  getR() * cos(getTheta());
+    return ROOT::Math::XYZVector(cluster_x, cluster_y, cluster_z);
+    ```  
 
 IS IT WORRYING THAT THE CLUSTER DEFINED HERE IS THE ECLCLUSTER BUT WE ARE USING IT FOR KLM CLUSTER??
 
