@@ -5,7 +5,9 @@ Here are the notes on K_L identification. It goes through how the variables rela
   - TYPE: ```Float_t```
   - Defined at ```reconstruction/modules/KlId/KLMExpert/KLMExpertModule.cc```:  
     &nbsp;&nbsp;&nbsp;&nbsp;```m_KLMnCluster = m_klmClusters.getEntries();```  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```m_KLMnCluster = m_klmClusters.getEntries();```
+as the entry number of the object: {\texttt{m\_klmClusters}}.
+    
+    
 
 
 
