@@ -10,10 +10,10 @@ as the number of entries of ```m_klmClusters```.
 
 * ```m_KLMnLayer``` - number of layers hit in KLM cluster
   - TYPE: ```Float_t```
-  - Defined at ```reconstruction/modules/KlId/KLMExpert/KLMExpertModule.cc```:
-```cpp
-m_KLMnLayer = cluster.getLayers();
-```
+  - Defined at ```reconstruction/modules/KlId/KLMExpert/KLMExpertModule.cc```:  
+  ```cpp
+  m_KLMnLayer = cluster.getLayers();
+  ```
 as the numbers of layers extracted from function ```getLayers()```, which is defined at ```klm/dataobjects/bklm/BKLMHit1d.h``` like this:  
 ```cpp
 return BKLMElementNumbers::getLayerByModule(m_ModuleID);
