@@ -35,7 +35,7 @@ CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m\
 ```const ROOT::Math::XYZVector& clusterPos = cluster.getClusterPosition();```  
 ```m_KLMglobalZ  = clusterPos.Z();```  
 where ```getClusterPosition()``` is defined at ```mdst/dataobjects/ECLClusters.cc```:  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```cpp
+```cpp
 TMatrixDSym ECLCluster::getCovarianceMatrix3x3() const{ 
     const double cluster_x =  getR() * sin(getTheta()) * cos(getPhi())
     const double cluster_y =  getR() * sin(getTheta()) * sin(getPhi());  
