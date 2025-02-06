@@ -30,7 +30,7 @@ Here are the notes on K_L identification. It goes through how the variables rela
       return ((module & BKLM_LAYER_MASK)>> BKLM_LAYER_BIT) + 1;
       ```
 
-> **Note** CONTINUE LATER!!!!!!!!!!! DONT UNDERSTAND
+> **Note** CONTINUE LATER
 
 
 * ```m_KLMnInnermostLayer```- number of innermost layers hit cluster
@@ -41,7 +41,7 @@ Here are the notes on K_L identification. It goes through how the variables rela
       m_KLMnInnermostLayer = cluster.getInnermostLayer();
       ```
 
-> **Note** CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m\_KLMnLayer, eg the smallest number or sth
+> **Note** CANT FIND DEFINITION OF getInnermostLayer(), SUSPECT HAS SOMETHING TO DO WITH m_KLMnLayer, eg the smallest number or sth
 
     
 * ```m_KLMglobalZ```- global Z position in KLM
@@ -72,7 +72,7 @@ Here are the notes on K_L identification. It goes through how the variables rela
       ```cpp
       m_KLMtime = cluster.getTime();
       ```
-> **Note** COULD NOT FIND DEF OF getTime()!!!!
+> **Note** COULD NOT FIND DEF OF getTime()
 
 * ```m_KLMavInterClusterDist```- average distance between all KLM clusters
   - TYPE: ```Float_t```
@@ -132,8 +132,6 @@ Here are the notes on K_L identification. It goes through how the variables rela
     is long, will not write here) this function will return ```true``` if the input particle is K_L
     or if the particle is a daughter of K_L. Otherwise will return ```false```. 
 
-> **Note** this function returns 0 or 1. Is it reasonable to define ```m\_KLMTruth``` as ```Float_t``` rather than ```int``` type??
-
     
 * ```m_KLMnextCluster```- distance to next KLM cluster
   - TYPE: ```Float_t```
@@ -173,7 +171,7 @@ Here are the notes on K_L identification. It goes through how the variables rela
       TrackClusterSeparation::TrackClusterSeparation() :
       m_Distance(1.0E10), // "infinity"
       ```
-> **Note** Cannot find code that changes this value, would be bad if this was used in all cases, FIND WHERE
+> **Note** Cannot find code that changes this value, root files does have varying numbers so it is done somewhere, FIND WHERE
 
 * ```m_KLMTrackSepAngle```- angular distance from track separation object
   - TYPE: ```Float_t```
