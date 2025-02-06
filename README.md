@@ -171,9 +171,25 @@ Here are the notes on K_L identification. It goes through how the variables rela
       TrackClusterSeparation::TrackClusterSeparation() :
       m_Distance(1.0E10), // "infinity"
       ```
-      > **Note** looks like a dead end but not 
+    > **Note** looks like a dead end but not: ```getSOMETHING``` functions usually grabs the variable that ```setSOMETHING``` has defined.
+
+    Looking at ```tracking/dataobjects/TrackClusterSeparation.h```:
+      ```cpp
+      void setDistance(double d) { m_Distance = d; }
+      ```
+    sets the m_Distance that the function ```getDistance()``` retrieves. ```setDistance``` is defeined at ```tracking/trackExtrapolateG4e/TrackExtrapolateG4e.cc``` and the relevant lines are:
+      ```cpp
+      G4ThreeVector pos  = track->GetPosition(); // this is at postStepPoint
+      if (klmClusterInfo != nullptr) {
+        for (unsigned int c = 0; c < klmClusterInfo->size(); ++c) {
+          G4ThreeVector klmPos = (*klmClusterInfo)[c].second;
+          G4ThreeVector separation = klmPos - pos;
+          double distance = separation.mag();
+          if (distance < klmHit[c].getDistance()) {
+            klmHit[c].setDistance(distance);
+      ```      
       
-> **Note** Cannot find code that changes this value, root files does have varying numbers so it is done somewhere, FIND WHERE
+> **Note** Cannot find code that changes this value, root files does have varying numbers so it is done somewhere:  ```tracking/trackExtrapolateG4e/TrackExtrapolateG4e.cc``` where? try again
 
 * ```m_KLMTrackSepAngle```- angular distance from track separation object
   - TYPE: ```Float_t```
