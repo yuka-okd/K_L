@@ -163,7 +163,7 @@ Here are the notes on K_L identification. It goes through how the variables rela
     and ```getDistance()``` defined at ```tracking/dataobjects/TrackClusterSeparation.h```:
 
       ```cpp
-      double getDistance() const { return m\_Distance; }
+      double getDistance() const { return m_Distance; }
       ```
     where ```m\_Distance``` is initialized at ```tracking/dataobjects/TrackClusterSeparation.cc```:
 
