@@ -171,6 +171,8 @@ Here are the notes on K_L identification. It goes through how the variables rela
       TrackClusterSeparation::TrackClusterSeparation() :
       m_Distance(1.0E10), // "infinity"
       ```
+      > **Note** looks like a dead end but not 
+      
 > **Note** Cannot find code that changes this value, root files does have varying numbers so it is done somewhere, FIND WHERE
 
 * ```m_KLMTrackSepAngle```- angular distance from track separation object
