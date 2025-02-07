@@ -300,10 +300,15 @@ Here are the notes on K_L identification. It goes through how the variables rela
       pair<ECLCluster*, double> closestECLAndDist = findClosestECLCluster(clusterPos, eclHypothesis);
       ECLCluster* closestECLCluster = get<0>(closestECLAndDist);
       ```
+    where ```findClosestECLCluster``` returns: ```return std::make_pair(closestECL, closestECLAngleDist);```.
+    
     
 
-> **Note** NOT DONE COME BACK TO THIS
+> **Note** UNDERSTAND WHAT `findClosestCluster``` DOES: IT IS DEFINED AT ```KlId.h```
 
+* ```m_KLMECLdeltaL```- distance between track entry point and cluster center, might be removed
+  - TYPE: ```Float_t```
+    
 
 
 
