@@ -291,7 +291,7 @@ Here are the notes on K_L identification. It goes through how the variables rela
 
 * ```m_KLMECLE```- energy measured in associated ECL cluster
   - TYPE: ```Float_t```
-  - This variable is defiend at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
       ```cpp
       m_KLMECLE = closestECLCluster->getEnergy(eclHypothesis)
       ```
@@ -300,8 +300,10 @@ Here are the notes on K_L identification. It goes through how the variables rela
       pair<ECLCluster*, double> closestECLAndDist = findClosestECLCluster(clusterPos, eclHypothesis);
       ECLCluster* closestECLCluster = get<0>(closestECLAndDist);
       ```
+    
 
 > **Note** NOT DONE COME BACK TO THIS
+
 
 
 
