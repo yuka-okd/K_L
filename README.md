@@ -308,6 +308,101 @@ Here are the notes on K_L identification. It goes through how the variables rela
 
 * ```m_KLMECLdeltaL```- distance between track entry point and cluster center, might be removed
   - TYPE: ```Float_t```
+
+* ```m_KLMECLminTrackDist```- track distance between associated ECL cluster and track extrapolated into ECL
+  - TYPE: ```Float_t```
+ 
+* ```m_KLMECLE9oE25```- E in surrounding 9 crystals divided by surrounding 25 crydtalls
+  - TYPE: ```Float_t```
+ 
+* ```m_KLMECLTiming```- timing of associated ECL cluster
+  - TYPE: ```Float_t```
+
+* ```m_KLMECLTerror```- uncertainty on time in associated ECL cluster
+  - TYPE: ```FLoat_t```
+
+* ```m_KLMECLEerror```- uncertainty on E in associated ECL cluster
+  - TYPE: ```Float_t```
+
+* ```m_KLMtrackToECL```- primitive distance cluster <-> track for associated ECL cluster
+  - TYPE: ```Float_t```
+
+* ```m_KLMKLid```- KlId for that object
+  - TYPE: ```Float_t```
+
+* ```m_KLMMCMom```- momentum of matched mc particle
+  - TYPE: ```Float_t```
+
+* ```m_KLMMCPhi```- phi of matched mc particle
+  - TYPE: ```Float_t```
+
+* ```m_KLMMCTheta```- theta of matched mc particle
+  - TYPE: ```Float_t```
+ 
+* ```m_KLMMom```- measured momentum
+  - TYPE: ```Float_t```
+
+* ```m_KLMPhi```- measured phi
+  - TYPE: ```Float_t```
+
+* ```m_KLMTheta```- measured theta
+  - TYPE: ```Float_t```
+
+* ```m_KLMMCStatus```- MC particles status
+  - TYPE: ```Float_t```
+
+* ```m_KLMMCLifetime```- MC partilces life time
+  - TYPE: ```Float_t```
+
+* ```m_KLMMCPDG```- pdg code of matched MCparticle
+  - TYPE: ```Float_t```
+
+* ```m_KLMMCPrimaryPDG```- pdg code of MCparticles mother, for example pi0 for some gammas
+  - TYPE: ```Float_t```
+
+* ```m_KLMECLHypo```- hypotheis id of closest ecl cluster 5: gamma, 6:hadron
+  - TYPE: ```Float_t```
+ 
+* ```m_KLMECLZMVA```- zernike mva output for closest ECL cluster (based on around 10 z-moments)
+  - TYPE: ```Float_t```
+ 
+* ```m_KLMECLZ40```- zernike moment 4,0 of closest ecl cluster
+  - TYPE: ```Float_t```
+
+* ```m_KLMECLZ51```- zernike moment 5,1 of closest ECL cluster
+  - TYPE: ```Float_t```
+
+* ```m_KLMECLUncertaintyPhi```- phi uncertainty oof closeest ecl cluster
+  - TYPE: ```Float_t```
+ 
+* ```m_KLMECLUncertaintyTheta```- theta uncertainty of closest ECL cluster
+  - TYPE: ```Float_t```
+
+* ```m_KLMMCWeight```- mc weight
+  - TYPE: ```Float_t```
+
+* ```m_KLMtrackFlag```- track flag for belle comparision
+  - TYPE: ```Float_t```
+
+* ```m_KLMeclFlag```- ecl flag for belle comparision
+  - TYPE: ```Float_t```
+ 
+
+Other variables: 
+
+* ```m_klmClusters```
+  - TYPE: FIND IT
+  - Defined at ```analysis/modules/RestOfEventBuilder/RestOfEventBuilderModule.cc```:
+      ```cpp
+      const KLMCluster* klmCluster = m\_klmClusters[i];
+      ```
+    where KLMCluster is a class defined at ```mdst/dataobjects/KLMCluster.h```
+
+
+ 
+
+
+
     
 
 
