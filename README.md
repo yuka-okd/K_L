@@ -328,8 +328,18 @@ Here are the notes on K_L identification. It goes through how the variables rela
       ```
     where ```lTrk``` is given a value in funcion ```computeDepth()```.
 
-    ```computeDepth()``` is defined in the same 
-    
+    ```computeDepth()``` is defined in the same file with relevant snippit as follows:
+      ```cpp
+      ROOT::Math::XYZVector cvec = geometry->GetCrystalVec(cellid - 1);
+      avgDir += energy * cvec; 
+      ROOT::Math::XYZVector w0 = showerCenter - trkpos;
+      double costh = avgDir.Unit().Dot(trkdir);
+      double sin2th = 1 - costh * costh;
+  
+      lTrk = w0.Dot(trkdir) - costh * w0.Dot(avgDir.Unit());
+      lTrk /= sin2th;
+      ```
+    ```avgDir``` seems to represent the general direction of the shower. ```w0``` is a vector between track position and center of shower.  ```trkdir``` is defined in the same code as ```trkdir = extHit.getMomentum().Unit();``` which seems to be the unit vector direction of the hit. Therefore costh is the dot product between the shower and the track which gives cosine angle between the two. The last two lines calculates the distance between track and shower with respect to the track's direction. WHAT IS THE DIVISION FOR
 
 
 * ```m_KLMECLminTrackDist```- track distance between associated ECL cluster and track extrapolated into ECL
