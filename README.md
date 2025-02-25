@@ -308,6 +308,29 @@ Here are the notes on K_L identification. It goes through how the variables rela
 
 * ```m_KLMECLdeltaL```- distance between track entry point and cluster center, might be removed
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc```:
+      ```cpp
+      m_KLMECLdeltaL         = closestECLCluster->getDeltaL();;
+      ```
+    where ```closestECLCluster``` is defined in the same code as
+      ```cpp
+      pair<ECLCluster*, double> closestECLAndDist = findClosestECLCluster(clusterPos, eclHypothesis);
+      ECLCluster* closestECLCluster = get<0>(closestECLAndDist);
+      ```
+    ```getDeltaL()``` is defined to get the value of ```m_deltaL``` in     
+    ```mdst/dataobjects/ECLCluster.h```, and ```m_deltaL``` is defined in ```ecl/modules/eclClusterProperties/ECLClusterPropertiesModules.cc``` like below:
+
+      ```cpp
+      if (cluster->isTrack()) {
+        double lTrk, lShower;
+        computeDepth(shower, lTrk, lShower);
+        cluster->setdeltaL(lTrk);
+      ```
+    where ```lTrk``` is given a value in funcion ```computeDepth()```.
+
+    ```computeDepth()``` is defined in the same 
+    
+
 
 * ```m_KLMECLminTrackDist```- track distance between associated ECL cluster and track extrapolated into ECL
   - TYPE: ```Float_t```
