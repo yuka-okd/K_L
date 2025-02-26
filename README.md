@@ -339,7 +339,10 @@ Here are the notes on K_L identification. It goes through how the variables rela
       lTrk = w0.Dot(trkdir) - costh * w0.Dot(avgDir.Unit());
       lTrk /= sin2th;
       ```
-    ```avgDir``` seems to represent the general direction of the shower. ```w0``` is a vector between track position and center of shower.  ```trkdir``` is defined in the same code as ```trkdir = extHit.getMomentum().Unit();``` which seems to be the unit vector direction of the hit. Therefore costh is the dot product between the shower and the track which gives cosine angle between the two. The last two lines calculates the distance between track and shower with respect to the track's direction. WHAT IS THE DIVISION FOR
+    ```avgDir``` seems to represent the general direction of the shower. ```w0``` is a vector between track position and center of shower.  ```trkdir``` is defined in the same code as ```trkdir = extHit.getMomentum().Unit();``` which seems to be the unit vector direction of the hit. Therefore costh is the dot product between the shower and the track which gives cosine angle between the two. The last two lines calculates the distance between track and shower with respect to the track's direction.
+
+
+>**Note** WHAT IS THE DIVISION FOR
 
 
 * ```m_KLMECLminTrackDist```- track distance between associated ECL cluster and track extrapolated into ECL
