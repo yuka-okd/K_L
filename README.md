@@ -321,6 +321,10 @@ Here are the notes on K_L identification. It goes through how the variables rela
     ```mdst/dataobjects/ECLCluster.h```, and ```m_deltaL``` is defined in ```ecl/modules/eclClusterProperties/ECLClusterPropertiesModules.cc``` like below:
 
       ```cpp
+      // compute path lengths on the energy weighted average crystals
+      // direction and on the extrapolated track direction corresponding to
+      // the minimum distance among the two lines. if more than one track is
+      // related to a cluster the one with the highest momentum is used
       if (cluster->isTrack()) {
         double lTrk, lShower;
         computeDepth(shower, lTrk, lShower);
@@ -347,9 +351,31 @@ Here are the notes on K_L identification. It goes through how the variables rela
 
 * ```m_KLMECLminTrackDist```- track distance between associated ECL cluster and track extrapolated into ECL
   - TYPE: ```Float_t```
+  - This varible is defined in ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as
+      ```cpp
+      m_KLMECLminTrackDist   = closestECLCluster->getMinTrkDistance();
+      ```
+    where the function ```getMinTrkDistance()``` is defined to extract the output of ```setMinTrkDistance(dist)``` which is defined in ```ecl/modules/eclClusterProperties/ECLClusterPropertiesModules.cc``` as ```double dist = computeTrkMinDistance(shower, m_tracks, trackID);``` where ```computeTrkMinDistance()``` is defined below as:
+      ```cpp
+      ROOT::Math::XYZVector cryCenter;
+      VectorUtil::setMagThetaPhi(
+      cryCenter, shower.getR(), shower.getTheta(), shower.getPhi());
+      for (const auto& extHit : track.getRelationsTo<ExtHit>()) {
+        trkpos = extHit.getPosition();
+        double distance = (cryCenter - trkpos).R();
+      }
+      ```
+    ```setMaghetaPhi()``` is defined at ```framework/geometry/VectorUtil.h``` where it converts the mag, theta and phi coordinates to x, y and z coordinates and outputs the vector in cartesian. ```cryCenter``` refers to the geometrical center of the shower in ECL. ```trkpos``` extracts the position of the extrapoalted hit in the ECL. ```distance``` equals to the distance between the centre of the shower in ECL and the extrapolated hit in the ECL. This becomes the input value for ```setMinTrkDistance``` which outputs ```m_KLMECLminTrackDist = distance```. In my understanding, the smaller the ```m_KLMECLminTrackDist```, the more accurate the prediction is. 
+      
+    
  
 * ```m_KLMECLE9oE25```- E in surrounding 9 crystals divided by surrounding 25 crydtalls
   - TYPE: ```Float_t```
+  - This varibale is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```closestECLCluster->getE9oE21();```, where the output of ```getE90E21()``` is set by the return value of ```setE9oE21()```
+    ```setE9oE25()``` is defined at ```ecl/dataobjects/ECLShower``` as ```void setE9oE21(double E9oE21) { m_E9oE21 = E9oE21; }```. The input for the ```setE9oE21``` appears at ```ecl/modules/eclShowerShape/ECLShowerShapeModule.cc`` as shown: ```if (eclShower->getE9oE21() < 1e-9) eclShower->setE9oE21(computeE9oE21(*eclShower));```. ```m_E9oE21``` is initiated at ```ecl/dataobjects/ECLShower.h``` as 0.0. ```computeE9oE21()``` is defined 
+
+>**Note** It says E25 but actually uses E21 which is the 5x5 crystals excluding the four corners 
+
  
 * ```m_KLMECLTiming```- timing of associated ECL cluster
   - TYPE: ```Float_t```
