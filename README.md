@@ -392,22 +392,111 @@ Here are the notes on K_L identification. It goes through how the variables rela
  
 * ```m_KLMECLTiming```- timing of associated ECL cluster
   - TYPE: ```Float_t```
-  - This varibale is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMECLTiming         = closestECLCluster->getTime();``` . 
+  - This varibale is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMECLTiming         = closestECLCluster->getTime();```, where ```getTime()``` returns ```m_time```.
+>**Note** Check whether setTime() is defined at ```rawdata/modules/SetMetaTimeModule.py``` or not 
 
 * ```m_KLMECLTerror```- uncertainty on time in associated ECL cluster
   - TYPE: ```FLoat_t```
+  - This variable defined in the ```DataWriterModule.cc``` as ```m_KLMECLTerror         = closestECLCluster->getDeltaTime99();``` where ```getDeltaTime99()``` is defined at ```mdst/dataobjects/ECLCluster.h``` as ```double getDeltaTime99() const {return m_deltaTime99;}```, where ```m_deltaTime99``` is is set by ```setDeltaTime99()```, which is defined as tim ethat contains 99% of signal crystals.
+    ```m_deltaTime99``` seemed to be defined at ```ecl/modules/eclSplitterN1/ECLSplitterN1Module.cc```:
+      ```cpp
+      for (unsigned int i = 0; i < digitVector.size(); ++i) {
+        const ECLCalDigit dig = digitVector[i];
+        highestEnergyTimeResolution = dig.getTimeResolution();
+        aECLShower->setDeltaTime99(highestEnergyTimeResolution);
+      ```
+    where ```highestEnergyTimeResolution``` is defined in ```ecl/modules/eclDigitCalibration/ECLDigitCalibratorModule.cc```:
+      ```cpp
+      for (auto& aECLCalDigit : m_eclCalDigits) {
 
+        // perform the time resolution calibration
+        const double t99 = getT99(aECLCalDigit.getCellId(),
+                                  aECLCalDigit.getEnergy(),
+                                  aECLCalDigit.hasStatus(ECLCalDigit::c_IsFailedFit),
+                                  bgCount); // calibrated time resolution
+        aECLCalDigit.setTimeResolution(t99);
+      ```
+    where ```getT99()``` is defined in the same file as:
+      ```cpp
+      double ECLDigitCalibratorModule::getT99(const int cellid, const double energy, const bool fitfailed, const int bgcount) const
+      {
+      const double bglevel = TMath::Min((double)bgcount / (double)c_nominalBG * m_th1fBackground->GetBinContent(cellid) / m_averageBG, m_pol2Max); // c_nominalBG = 183 for actual version of digitizer, m_averageBG is about 2 MeV/ mus
+      // Get p1 as function of background level
+      const double p1 = c_pol2Var1 + c_pol2Var2 * bglevel + c_pol2Var3 * bglevel * bglevel;
+
+      // inverse energy in 1/MeV
+      double einv = 0.;
+      if (energy > 1e-12)
+        einv = 1. / (energy / Belle2::Unit::MeV);
+
+      if (energy > 1e-12)
+        einv = 1. / (energy / Belle2::Unit::MeV);
+        // calculate t99 using the inverse energy and p1 (p0 is zero)
+        double t99 = p1 * einv;
+    
+      // for high energies we fix t99 to 3.5ns
+      if (t99 < c_minT99)
+        t99 = c_minT99;
+      ```
+<**Note** investigate what p1 and other variables in bglevel is
+
+    
+  
 * ```m_KLMECLEerror```- uncertainty on E in associated ECL cluster
   - TYPE: ```Float_t```
+  - Variable defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMECLEerror         = closestECLCluster->getUncertaintyEnergy();```. ```mdst/dataobjects/ECLCluster.h``` defines ```double getUncertaintyEnergy() const {return (m_sqrtcovmat_00);}```, where ```m_sqrtcovmat_00``` is set at ```mdst/dataobjects/ECLCluster.h``` as ```void setCovarianceMatrix(double covArray[6])
+    {
+      m_sqrtcovmat_00 = sqrt(fabs(covArray[0]));```. The input matrix is defined at ```ecl/eclCovarianceMatrix/ECLCovariantMatrixModule.cc``` as: ``` double covMatrix[6] = {sigmaEnergy * sigmaEnergy, 0.0, sigmaPhi * sigmaPhi, 0.0, 0.0, sigmaTheta * sigmaTheta};``` where the relevant ```covMatrix[0]``` is in terms of ```sigmaEnergy``` which is defined differently according to the detector region, and ```const double energy = eclShower.getEnergy();``` This script only does the calculation for photon showers. 
+    
 
 * ```m_KLMtrackToECL```- primitive distance cluster <-> track for associated ECL cluster
   - TYPE: ```Float_t```
+ 
+<**Note** CANNOT FIND ANY INFORMATION ON THIS
 
 * ```m_KLMKLid```- KlId for that object
   - TYPE: ```Float_t```
+  - This varibale is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as:
+      ```cpp
+      KlId* klid = cluster.getRelatedTo<KlId>();
+      if (klid) {
+      m_KLMKLid = klid->getKlId();
+      ```
+    where ```getKlId()``` is defined at ```mdst/dataobjects/KlId.cc```:
+      ```cpp
+      double KlId::getKlId() const
+      {
+        auto klmClusterWeight = getRelatedFromWithWeight<KLMCluster>();
+        if (klmClusterWeight.first) return klmClusterWeight.second;
+        auto eclClusterWeight = getRelatedFromWithWeight<ECLCluster>();
+        if (eclClusterWeight.first) return eclClusterWeight.second;
+        return nan("");
+      }
+      ```
+    where ```getRelatedFromWithWeight()``` is defined at ```framework/datastore/RelationsObject.h```:
+      ```cpp
+      template <class FROM> std::pair<FROM*, float> getRelatedFromWithWeight(const std::string& name = "",
+      const std::string& namedRelation = "") const
+      {
+      RelationEntry entry = DataStore::Instance().getRelationWith(DataStore::c_FromSide, this, m_cacheDataStoreEntry, m_cacheArrayIndex, FROM::Class(), name, namedRelation);
+      return std::make_pair(static_cast<FROM*>(entry.object), entry.weight);
+      }
+      ```
+    hence ```getKlId()``` returns the second element of the pair which is just the weight. 
+
 
 * ```m_KLMMCMom```- momentum of matched mc particle
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` : ```m_KLMMCMom        = part->getMomentum().R();```
+    ```getMomentum``` is defined at ```mdst/dataobjectsMCParticle.h``` as
+    ```cpp
+    ROOT::Math::XYZVector getMomentum() const
+    {
+      return ROOT::Math::XYZVector(m_momentum_x, m_momentum_y, m_momentum_z);
+    }
+    ```
+<**Note** find out how they defined ```m_momentum_x, m_momentum_y, m_momentum_z```
+
 
 * ```m_KLMMCPhi```- phi of matched mc particle
   - TYPE: ```Float_t```
