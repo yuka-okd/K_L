@@ -372,13 +372,27 @@ Here are the notes on K_L identification. It goes through how the variables rela
 * ```m_KLMECLE9oE25```- E in surrounding 9 crystals divided by surrounding 25 crydtalls
   - TYPE: ```Float_t```
   - This varibale is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```closestECLCluster->getE9oE21();```, where the output of ```getE90E21()``` is set by the return value of ```setE9oE21()```
-    ```setE9oE25()``` is defined at ```ecl/dataobjects/ECLShower``` as ```void setE9oE21(double E9oE21) { m_E9oE21 = E9oE21; }```. The input for the ```setE9oE21``` appears at ```ecl/modules/eclShowerShape/ECLShowerShapeModule.cc`` as shown: ```if (eclShower->getE9oE21() < 1e-9) eclShower->setE9oE21(computeE9oE21(*eclShower));```. ```m_E9oE21``` is initiated at ```ecl/dataobjects/ECLShower.h``` as 0.0. ```computeE9oE21()``` is defined 
+    ```setE9oE25()``` is defined at ```ecl/dataobjects/ECLShower``` as ```void setE9oE21(double E9oE21) { m_E9oE21 = E9oE21; }```. The input for the ```setE9oE21``` appears at ```ecl/modules/eclShowerShape/ECLShowerShapeModule.cc`` as shown: ```if (eclShower->getE9oE21() < 1e-9) eclShower->setE9oE21(computeE9oE21(*eclShower));```. ```m_E9oE21``` is initiated at ```ecl/dataobjects/ECLShower.h``` as 0.0. ```computeE9oE21()``` is defined in ```ecl/modules/eclShowerShape/ECLShowerShapeModule.cc```:
+      ```cpp
+      const auto it9 = std::find(n9.begin(), n9.end(), cellid);
+      if (it9 != n9.end()) {
+        energy9 += weight * energy;
+      }
+      const auto it21 = std::find(n21.begin(), n21.end(), cellid);
+      if (it21 != n21.end()) {
+        energy21 += weight * energy;
+      }
+      ```
+    where ```n9``` and ```n21``` are the list of 9 and 21 neighbour ids. Therefore the function returns the sum of weighted energy of the neighbours. 
+
+
 
 >**Note** It says E25 but actually uses E21 which is the 5x5 crystals excluding the four corners 
 
  
 * ```m_KLMECLTiming```- timing of associated ECL cluster
   - TYPE: ```Float_t```
+  - This varibale is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMECLTiming         = closestECLCluster->getTime();``` . 
 
 * ```m_KLMECLTerror```- uncertainty on time in associated ECL cluster
   - TYPE: ```FLoat_t```
