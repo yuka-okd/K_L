@@ -487,7 +487,7 @@ Here are the notes on K_L identification. It goes through how the variables rela
 
 * ```m_KLMMCMom```- momentum of matched mc particle
   - TYPE: ```Float_t```
-  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` : ```m_KLMMCMom        = part->getMomentum().R();```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` : ```m_KLMMCMom = part->getMomentum().R();```
     ```getMomentum``` is defined at ```mdst/dataobjectsMCParticle.h``` as
     ```cpp
     ROOT::Math::XYZVector getMomentum() const
@@ -495,26 +495,35 @@ Here are the notes on K_L identification. It goes through how the variables rela
       return ROOT::Math::XYZVector(m_momentum_x, m_momentum_y, m_momentum_z);
     }
     ```
-<**Note** find out how they defined ```m_momentum_x, m_momentum_y, m_momentum_z```
+<**Note** find out how they defined ```m_momentum_x, m_momentum_y, m_momentum_z``` as well as what ```.R()``` is. I suspect that it is a magnitude but not sure. 
 
 
 * ```m_KLMMCPhi```- phi of matched mc particle
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMMCPhi        = part->getMomentum().Phi();```
+    The ```getMomentum()``` is te same as above. ```Phi()``` is defined in ```framework/geometry/B2Vector3.h``` as ```DataType Phi() const { return X() == 0 && Y() == 0 ? 0 : atan2(Y(), X()); }```. This returns the azimuthal angle. 
 
 * ```m_KLMMCTheta```- theta of matched mc particle
   - TYPE: ```Float_t```
+  - This varibale is defined in ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as: ```m_KLMMCTheta      = part->getMomentum().Theta();``` where ```Theta()``` is defined in ```framework/geometry/B2Vector3.h``` as ``` DataType Theta() const { return X() == 0 && Y() == 0 && Z() == 0 ? 0 : atan2(Perp(), Z()); }```. This returns the MC polar angle. 
  
 * ```m_KLMMom```- measured momentum
   - TYPE: ```Float_t```
+>**Note** cannot find info about this 
 
 * ```m_KLMPhi```- measured phi
   - TYPE: ```Float_t```
+  - This variable is found at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as: ```m_KLMPhi = clusterPos.Phi();``` where ```clusterPos``` is defined as ```const ROOT::Math::XYZVector& clusterPos = cluster.getClusterPosition();``` where ```cluster``` is defined at the for loop:``` for (const KLMCluster& cluster : m_klmClusters) {``` 
 
 * ```m_KLMTheta```- measured theta
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as: ```m_KLMTheta = clusterPos.Theta();``` where ```clusterPos``` is defined as ```const ROOT::Math::XYZVector& clusterPos = cluster.getClusterPosition();``` where ```cluster``` is defined at the for loop:``` for (const KLMCluster& cluster : m_klmClusters) {``` (same as above)
+    ```Theta()``` is defined in ```framework/geometry/B2Vector3.h``` as ``` DataType Theta() const { return X() == 0 && Y() == 0 && Z() == 0 ? 0 : atan2(Perp(), Z()); }```. This returns the measured polar angle. 
+
 
 * ```m_KLMMCStatus```- MC particles status
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMMCStatus     = part->getStatus();```
 
 * ```m_KLMMCLifetime```- MC partilces life time
   - TYPE: ```Float_t```
