@@ -592,29 +592,143 @@ Here are the notes on K_L identification. It goes through how the variables rela
 * ```m_KLMECLZMVA```- zernike mva output for closest ECL cluster (based on around 10 z-moments)
   - TYPE: ```Float_t```
   - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMECLZMVA           = closestECLCluster->getZernikeMVA();```. ```getZernikeMVA()``` is defined at ```mdst/dataobjects/ECLCluster.h``` as ```double getZernikeMVA() const { return m_zernikeMVA; }``` which "Return MVA based hadron/photon value based on Zernike moments (shower shape variable)". ```m_zernikeMVA``` is defined as the output of ```void setZernikeMVA(double zernikemva) { m_zernikeMVA = zernikemva; }```
-    In ```ecl/moduleseclFinalize/ECLFinalizerModule.cc```, it states ```eclCluster->setZernikeMVA(eclShower->getZernikeMVA());```. In 
+    In ```ecl/moduleseclFinalize/ECLFinalizerModule.cc```, it states ```eclCluster->setZernikeMVA(eclShower->getZernikeMVA());```. The corresponding ```setZernikeMVA()``` seem to be used in ```ecl/modules/eclShowerShape/ECLShowerShapeModule.cc``` to define m_zernikeMVA.
+
+<**Note** has N1 N2 shower jargon I dont understand yet. Look into it when I have time
     
  
 * ```m_KLMECLZ40```- zernike moment 4,0 of closest ecl cluster
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as: ```m_KLMECLZ40            = closestECLCluster->getAbsZernike40();```. ```getZernike40()``` is defined at ```mdst/dataobjects/ECLCluster.h``` as ``` double getAbsZernike40() const { return m_absZernike40; }```, where ```m_absZernike40``` is defined as the output of ```setZernike40(double zernike40)```. This function is used at ```ecl/modules/eclFinalize/ECLFinalizerModule.cc```: ``` eclCluster->setAbsZernike40(eclShower->getAbsZernikeMoment(4, 0));```. Now looking for how ```getAbsZernikeMoment``` is defined in ```ecl/dataobjects/ECLShower.h```: ```  double getAbsZernikeMoment(unsigned int n, unsigned int m) const { return m_absZernikeMoments[(n * (n + 1)) / 2 + m - 1]; }``` where ```m_absZernikeMoments[(n * (n + 1)) / 2 + m - 1``` is set with the function ```setAbsZernikeMoment```: ```void setAbsZernikeMoment(unsigned int n, unsigned int m, double absZernikeMoment) { m_absZernikeMoments[(n * (n + 1)) / 2 + m - 1] = absZernikeMoment; }```. ```setAbsZernikeMoment``` is used in ```ecl/modules/eclShowerShape/ECLShowerShapeModule.cc``` as:
+      ```cpp
+      for (unsigned int n = 1; n <= 5; n++) {
+        for (unsigned int m = 0; m <= n; m++) {
+          eclShower->setAbsZernikeMoment(n, m, computeAbsZernikeMoment(projectedECLDigits, sumEnergies, n, m, rho0));
+      }
+      ```
+    where ```computeAbsZernikeMoment``` is defined as:
+      ```cpp
+      std::complex<double> sum(0.0, 0.0);
+
+      for (const auto projectedDigit : projectedDigits) {
+        double normalizedRho = projectedDigit.rho / rho0;     // Normalize radial distance according to rho0.
+        //Ignore crystals with rho > rho0, if requested
+        if (normalizedRho > 1.0) {
+          if (!m_zernike_useFarCrystals) continue;
+          else normalizedRho = 1.0; //crystals with rho > rho0 are scaled to rho0 instead of discarded
+        }
+
+        sum += projectedDigit.energy * std::conj(zernikeValue(normalizedRho, projectedDigit.alpha, n, m));
+      }
+      return (n + 1.0) / TMath::Pi() * std::abs(sum) / totalEnergy;
+      ```
+>**Note** I have no idea what projectedDigit is.come back to it 
+
+  
+
 
 * ```m_KLMECLZ51```- zernike moment 5,1 of closest ECL cluster
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as:```m_KLMECLZ51            = closestECLCluster->getAbsZernike51();``` where ```getAbsZernike51()``` is defined at ```mdst/dataobjects/ECLCluster.h``` as ```double getAbsZernike51() const { return m_absZernike51; }```. ```m_absZernike51``` is the output of ```void setAbsZernike51(double zernike51) { m_absZernike51 = zernike51; }```. Again, this function is used at ```ecl/modules/eclFinalize/ECLFinalizerModule.cc``` like the this ```eclCluster->setAbsZernike51(eclShower->getAbsZernikeMoment(5, 1));```. This goes back to ```getAbsZernikeMoment``` from above.
+ 
+>**Note** COME BACK TO IT WHEN THE PREVIOUS FUNCTION IS WELL UNDERSTOOD AS IT USES THE SAME FUNCION THAT I CURRENTLY HAVE NO UNDERSTANDING OF
 
 * ```m_KLMECLUncertaintyPhi```- phi uncertainty oof closeest ecl cluster
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as: ```m_KLMECLUncertaintyPhi = closestECLCluster->getUncertaintyPhi();```. ```getUncertaintyPhi()``` is defined as follows in ```mdst/dataobjects/ECLCluster.h```: ```double getUncertaintyPhi() const { return (m_sqrtcovmat_11);}```. ```m_sqrtcovmat_11``` is defined in a function defined in the same code:
+      ```cpp
+      void setCovarianceMatrix(double covArray[6]){
+      m_sqrtcovmat_11 = sqrt(fabs(covArray[2])); // phi
+      }
+      ```
+    This function is used in ```ecl/modules/eclFinalize/ECLFinalizerModule.cc```:
+      ```cpp
+      double covmat[6] = {
+        eclShower->getUncertaintyEnergy()* eclShower->getUncertaintyEnergy(),
+        0.0,
+        eclShower->getUncertaintyPhi()* eclShower->getUncertaintyPhi(),
+        0.0,
+        0.0,
+        eclShower->getUncertaintyTheta()* eclShower->getUncertaintyTheta()
+      };
+      eclCluster->setCovarianceMatrix(covmat);
+      ```
+<**Note** continue later from looking for getUncertainty functions. perhaps I have already defined it earlier as it sounds familiar
+      
  
 * ```m_KLMECLUncertaintyTheta```- theta uncertainty of closest ECL cluster
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMECLUncertaintyTheta = closestECLCluster->getUncertaintyTheta();```. ```getUncertaintyTheta()``` is defined at ```mdst/dataobjects/ECLCluster.h``` as ``` double getUncertaintyTheta() const {return (m_sqrtcovmat_22);}```. the output is defined here:
+      ```cpp
+      void setCovarianceMatrix(double covArray[6]){
+        m_sqrtcovmat_22 = sqrt(fabs(covArray[5])); // theta
+      }
+      ```
+    where ```covArray``` is defined the same as above.
+<**Note** WHAT IS ```fabs```
+        
+
 
 * ```m_KLMMCWeight```- mc weight
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as
+       ```cpp
+       const auto mcParticleWeightPair = cluster.getRelatedToWithWeight<MCParticle>();
+       m_KLMMCWeight = mcParticleWeightPair.second;
+       ```
+      where ```getRelatedToWithWeight``` is defined at ```framework/datastore/RelationsObject.h``` as
+      ```cpp
+      template <class TO> std::pair<TO*, float> getRelatedToWithWeight(const std::string& name = "", const std::string& namedRelation = "") const{
+        RelationEntry entry = DataStore::Instance().getRelationWith(DataStore::c_ToSide, this, m_cacheDataStoreEntry, m_cacheArrayIndex, TO::Class(), name, namedRelation);
+        return std::make_pair(static_cast<TO*>(entry.object), entry.weight);
+      }
+      ```
+      
+<**Note** CONTINUE LATER
+        
+
 
 * ```m_KLMtrackFlag```- track flag for belle comparision
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMtrackFlag                   = cluster.getAssociatedTrackFlag();```, where ```getAssociatedTrackFlag()``` is defined at ```mdst/dataobjects/KLMCluster.h``` as
+      ```cpp
+      bool KLMCluster::getAssociatedTrackFlag() const{
+        RelationVector<Track> tracks = this->getRelationsFrom<Track>();
+        return tracks.size() > 0;
+      }
+      ```
+    where ```getRelationsFrom``` is defined at ```framework/datastore/RelationsObject.h```:
+      ```cpp
+      template <class FROM> RelationVector<FROM> getRelationsFrom(const std::string& name = "", const std::string& namedRelation = "") const{
+        return RelationVector<FROM>(DataStore::Instance().getRelationsWith(DataStore::c_FromSide, this, m_cacheDataStoreEntry, m_cacheArrayIndex, FROM::Class(), name, namedRelation));
+      }
+      ```
+<**Note** CONTINUE ON LATER
+
+
+      
+
 
 * ```m_KLMeclFlag```- ecl flag for belle comparision
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMeclFlag                     = cluster.getAssociatedEclClusterFlag();```. ```getAssociatedEclClusterFlag()``` is defined at ```mdst/dataobjects/KLMCluster.cc``` as
+      ```cpp
+      bool KLMCluster::getAssociatedEclClusterFlag() const{
+        RelationVector<ECLCluster> eclClusters = this->getRelationsTo<ECLCluster>();
+        return eclClusters.size() > 0;
+      }
+      ```
+    where ```getRelationsTo``` is defined at ```framework/datastore/RelationsObject.h```:
+      ```cpp
+      template <class TO> RelationVector<TO> getRelationsTo(const std::string& name = "", const std::string& namedRelation = "") const{
+        return RelationVector<TO>(DataStore::Instance().getRelationsWith(DataStore::c_ToSide, this, m_cacheDataStoreEntry, m_cacheArrayIndex, TO::Class(), name, namedRelation));
+      }
+      ```
+>**Note** CONTINUE LATER
+
+
+    
+
  
 
 Other variables: 
