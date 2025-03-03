@@ -523,22 +523,77 @@ Here are the notes on K_L identification. It goes through how the variables rela
 
 * ```m_KLMMCStatus```- MC particles status
   - TYPE: ```Float_t```
-  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMMCStatus     = part->getStatus();```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMMCStatus     = part->getStatus();``` where ```getStatus``` is defined at ``` mdst/dataobjects/ECLCluster.h``` as: ```unsigned short getStatus() const {return m_status;}```. ```m_status``` is defined on the same code as ```void setStatus(EStatusBit status) { m_status = static_cast<short unsigned>(status);} ``` where the class ```EStatusBit``` is defined as:
+      ```cpp
+      /** bit 0: ECLCluster is matched to a ECL trigger cluster */
+      c_TriggerCluster   = 1 << 0,
+      /** bit 1: ECLCluster to ECLTRGCluster matcher was run */
+      c_TriggerClusterMatching = 1 << 1,
+      /** bit 2: ECLCluster has pulse shape discrimination variables.*/
+      c_PulseShapeDiscrimination = 1 << 2,
+      /** bit 3: ECLCluster has fit time that failed.*/
+      c_fitTimeFailed = 1 << 3,
+      /** bit 4: ECLCluster has time resolution calculation that failed.*/
+      c_timeResolutionFailed = 1 << 4
+      ```
+    according to this, this is likely translated into an integer and fed into ```setStatus()```. 
+    
+
 
 * ```m_KLMMCLifetime```- MC partilces life time
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as: ```m_KLMMCLifetime   = part->getLifetime();``` where ```getLifetime()``` is defined at ```mdst/dataobjects/MCParticle.h``` as: ```float getLifetime() const { return m_decayTime - m_productionTime; }```. It notes that this returns the lifetime in ns, and if particle crosses the siulation boundary, it is set as the time spent in that volume.
+    ```m_decayTime``` is defined as ```float getDecayTime() const { return m_decayTime; }``` where ``` void setDecayTime(float time) { m_decayTime = time; }```.
+    ```m_productionTime``` is defined as ```float getProductionTime() const { return m_productionTime; }``` where ```  void setProductionTime(float time) { m_productionTime = time; }```
+<**Note** NEXT STEP IS TO FIND OUT HOW THE VARIABLES ARE DEFINED
+
+  
+
 
 * ```m_KLMMCPDG```- pdg code of matched MCparticle
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as: ```m_KLMMCPDG        = std::abs(part->getPDG());``` where ```getPDG()``` is defined at ```mdst/dataobjects/MCParticle.h``` as ```int getPDG() const { return m_pdg; }```. ```m_pdg``` is defined as ```void setPDG(int pdg) { m_pdg = pdg; }```
+ 
+<**Note** FIND OUT WHERE THE pdg INPUT IS
 
 * ```m_KLMMCPrimaryPDG```- pdg code of MCparticles mother, for example pi0 for some gammas
-  - TYPE: ```Float_t```
+  - TYPE: ```Float_t````
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as: ```m_KLMMCPrimaryPDG = getPrimaryPDG(part);```. ```getPrimaryPDG()``` is defined at ```reconstruction/modules/KlId/KLMExpert/KlId.h``` as a while loop which runs whilst True, checks whether Klong, Kshort, kaon, neutron, proton, pion, pi0, muon, electron or photon, then checks whether the particle has Mother Particle, if not, it stops the while loop and returns the pdg code of the particle. If there is a mother particle, it will do the above procedure again and return the pdg code of the mother particle. If the mother particle has a mother then it repeats etc. The code mentions that this is "very imprecise but suffcient to understand if the backgrounds are charged, hadronic or gammas which is whats relevant for KlId investigations.".
+        
+
 
 * ```m_KLMECLHypo```- hypotheis id of closest ecl cluster 5: gamma, 6:hadron
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMECLHypo = closestECLCluster->getHypotheses();```. ```getHypotheses()``` is defined at ```mdst/dataobjects/ECLCluster.h``` as ``` unsigned short getHypotheses() const {return m_hypotheses;}```. ```m_hypotheses``` is defined in the same code as the output of ```void setHypothesis(EHypothesisBit hypothesis) { m_hypotheses = static_cast<short unsigned>(hypothesis); }```. ```EHypothesisBit``` is a class defined in the same code as follows:
+      ```cpp
+      enum class EHypothesisBit : short unsigned int {
+        /** None as initializer */
+        c_none = 1 << 0,
+        /** CR is split into a muon and n photons (T1) */
+        c_muonNPhotons = 1 << 1,
+        /** CR is reconstructed as a charged hadron (T2) */
+        c_chargedHadron = 1 << 2,
+        /** CR is split into an electron and n photons (T3) */
+        c_electronNPhotons = 1 << 3,
+        /** CR is split into n photons (N1) */
+        c_nPhotons = 1 << 4,
+        /** CR is reconstructed as a neutral hadron (N2) */
+        c_neutralHadron = 1 << 5,
+        /** CR is reconstructed as merged pi0 (N3)*/
+        c_mergedPi0 = 1 << 6
+      };
+      ```
+    
+
+
+
+
  
 * ```m_KLMECLZMVA```- zernike mva output for closest ECL cluster (based on around 10 z-moments)
   - TYPE: ```Float_t```
+  - This variable is defined at ```reconstruction/modules/KlId/DataWriter/DataWriterModule.cc``` as ```m_KLMECLZMVA           = closestECLCluster->getZernikeMVA();```. ```getZernikeMVA()``` is defined at ```mdst/dataobjects/ECLCluster.h``` as ```double getZernikeMVA() const { return m_zernikeMVA; }``` which "Return MVA based hadron/photon value based on Zernike moments (shower shape variable)". ```m_zernikeMVA``` is defined as the output of ```void setZernikeMVA(double zernikemva) { m_zernikeMVA = zernikemva; }```
+    In ```ecl/moduleseclFinalize/ECLFinalizerModule.cc```, it states ```eclCluster->setZernikeMVA(eclShower->getZernikeMVA());```. In 
+    
  
 * ```m_KLMECLZ40```- zernike moment 4,0 of closest ecl cluster
   - TYPE: ```Float_t```
